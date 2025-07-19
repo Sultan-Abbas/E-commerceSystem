@@ -12,7 +12,7 @@ def read_root():
     return{"message":"Welcome to the Backend of Ecomerce System"}
 
 @app.get("/greet")
-def greet_user(name = Optional[str]=None):
+def greet_user(name = Optional[str] == None):
     if name:
         return {"message":f"Hello!,{name}"}
     return {"message":"Hello There!"}
