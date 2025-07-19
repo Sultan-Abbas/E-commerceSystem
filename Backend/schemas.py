@@ -11,3 +11,4 @@ class LoginUser(BaseModel):
 class Product(BaseModel):
     name: str
     price: float
+#Clases
