@@ -15,7 +15,7 @@ def read_root():
     return{"message":"Welcome to the Backend of Ecomerce System"}
 #Greet
 @app.get("/greet")
-def greet_user(name = Optional[str] == None):
+def greet_user(name : Optional[str] = None):
     if name:
         return {"message":f"Hello!,{name}"}
     return {"message":"Hello There!"}
@@ -32,7 +32,7 @@ def register_user(user:RegisterUser,db:Session=Depends(get_db)):
     The Python object (new_user) initially only has the data you provided (e.g., username and password).
     The database may auto-generate additional values (like id, created_at, or server-side defaults) that aren't 
     in your Python object yet.SO we Use Refresh"""
-    db.refresh()
+    db.refresh(new_user)
     return {"message": "User registered successfully"}
 #login     
 @app.post("/login")
@@ -45,13 +45,13 @@ def login(user: LoginUser,db:Session=Depends(get_db)):
 #add_product   
 @app.post("/add-product")
 def add_product(product: Product,db:Session=Depends(get_db)):
-    existing_product= db.query(Product).filter(product.name==Product.name).first()
+    existing_product= db.query(Product).filter(Product.name==product.name).first()
     if existing_product:
         raise HTTPException(status_code=400,detail="Product Already Exists")
     new_product=Product(name=product.name,price=product.price)
     db.add(new_product)
     db.commit()
-    db.refresh()
+    db.refresh(new_product)
     return {"message": "Product added", "product": product}  
 
 #Shows_products     
