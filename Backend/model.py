@@ -13,5 +13,5 @@ class User(Base):
 class Product(Base):
     __tablename__ ="products"
     id=Column(Integer,index=True,primary_key=True)
-    name = Column(String,unique=True,index=True)
+    name = Column(String(250),unique=True,index=True)
     price = Column(Float)
