@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h2>Product Dashboard</h2>
+
+  <form id="addProductForm">
+    <input type="text" id="productName" placeholder="Product Name" required />
+    <input type="number" id="productPrice" placeholder="Price" step="0.01" required />
+    <button type="submit">Add Product</button>
+  </form>
+
+  <h3>Products:</h3>
+  <ul id="productList"></ul>
+
+  <script src="js/products.js"></script>
+</body>
+</html>
