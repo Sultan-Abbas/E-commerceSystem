@@ -5,8 +5,15 @@ from pydantic import BaseModel
 from schemas import RegisterUser,LoginUser,ProductCreate,ProductResponse
 from database import get_db
 from model import User as UserModel, Product as ProductModel
-
+from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # You can specify ["http://127.0.0.1:5500"] for more security
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # users_db = {}
 # products_db = []
 #home

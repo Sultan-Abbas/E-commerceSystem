@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 DB_USER = "root"
 DB_PASSWORD = "password"
 DB_HOST = "localhost"
-DB_PORT = "3307"
+DB_PORT = "3309"
 DB_NAME = "ecommerce"
 
 DATABASE_URL = f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"

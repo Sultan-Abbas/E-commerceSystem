@@ -13,6 +13,7 @@ class ProductCreate(BaseModel):
     price: float
 
 class ProductResponse(BaseModel):
+    message: str
     id: int
     name: str
     price: float
