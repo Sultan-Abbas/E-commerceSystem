@@ -2,9 +2,9 @@ from fastapi import FastAPI, HTTPException, Depends
 from typing import Optional
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
-from schemas import RegisterUser,LoginUser,Product
+from schemas import RegisterUser,LoginUser,ProductCreate,ProductResponse
 from database import get_db
-from model import User, Product
+from model import User as UserModel, Product as ProductModel
 
 app = FastAPI()
 # users_db = {}
@@ -22,10 +22,10 @@ def greet_user(name : Optional[str] = None):
 #register
 @app.post("/register")
 def register_user(user:RegisterUser,db:Session=Depends(get_db)):
-    db_user= db.query(User).filter(User.username==user.username ).first()
+    db_user= db.query(UserModel).filter(UserModel.username==user.username ).first()
     if db_user:
         raise HTTPException(status_code=400,detail="User Already Exists")
-    new_user=User(username=user.username,password=user.password)
+    new_user=UserModel(username=user.username,password=user.password)
     db.add(new_user)
     db.commit()
     """ When you create and commit a new database record:
@@ -37,33 +37,33 @@ def register_user(user:RegisterUser,db:Session=Depends(get_db)):
 #login     
 @app.post("/login")
 def login(user: LoginUser,db:Session=Depends(get_db)):
-    db_user= db.query(User).filter(User.username==user.username ).first()
+    db_user= db.query(UserModel).filter(UserModel.username==user.username ).first()
     if not db_user or db_user.password != user.password:  # Later: use password hashing!
         raise HTTPException(status_code=401, detail="Invalid credentials")
     return {"message": f"Welcome back, {user.username}!"}
     
 #add_product   
-@app.post("/add-product")
-def add_product(product: Product,db:Session=Depends(get_db)):
-    existing_product= db.query(Product).filter(Product.name==product.name).first()
+@app.post("/addproduct", response_model=ProductResponse)
+def add_product(product: ProductCreate,db:Session=Depends(get_db)):
+    existing_product= db.query(ProductModel).filter(ProductModel.name==product.name).first()
     if existing_product:
         raise HTTPException(status_code=400,detail="Product Already Exists")
-    new_product=Product(name=product.name,price=product.price)
+    new_product=ProductModel(name=product.name,price=product.price)
     db.add(new_product)
     db.commit()
     db.refresh(new_product)
     return {"message": "Product added", "product": product}  
 
 #Shows_products     
-@app.get("/showproducts")
+@app.get("/showproducts", response_model=ProductResponse)
 def get_products(db: Session = Depends(get_db)):
-    products = db.query(Product).all()
+    products = db.query(ProductModel).all()
     return {"products": products}
 
 #delete_products
-@app.delete("/delete-product/{product_name}")
+@app.delete("/deleteproduct/{product_name}")
 def delete_product(product_name: str, db: Session = Depends(get_db)):
-    product = db.query(Product).filter(Product.name == product_name).first()
+    product = db.query(ProductModel).filter(ProductModel.name == product_name).first()
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
     
@@ -72,9 +72,9 @@ def delete_product(product_name: str, db: Session = Depends(get_db)):
     return {"message": f"Product '{product_name}' deleted"}
 
 #update_products
-@app.put("/update-product/{product_name}")
-def update_product(product_name: str, updated_product: Product, db: Session = Depends(get_db)):
-    product = db.query(Product).filter(Product.name == product_name).first()
+@app.put("/updateproduct/{product_name}")
+def update_product(product_name: str, updated_product: ProductCreate, db: Session = Depends(get_db)):
+    product = db.query(ProductModel).filter(ProductModel.name == product_name).first()
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
     

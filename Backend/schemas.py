@@ -8,7 +8,15 @@ class LoginUser(BaseModel):
     username: str
     password: str
 
-class Product(BaseModel):
+class ProductCreate(BaseModel):
     name: str
     price: float
-#Clases
+
+class ProductResponse(BaseModel):
+    id: int
+    name: str
+    price: float
+    # Include other fields you want to expose
+    
+    class Config:
+        from_attributes = True

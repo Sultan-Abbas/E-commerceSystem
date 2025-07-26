@@ -7,6 +7,6 @@ document.body.getElementById('registerForm').addEventlistener('submit',async (e)
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({name,password}),
     });
-    const result = await post_function.json
+    const result = await post_function.json()
     document.getElementById('message').innerText(result.message || result.detail)
  });
