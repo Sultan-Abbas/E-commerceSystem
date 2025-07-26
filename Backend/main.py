@@ -59,7 +59,12 @@ def add_product(product: ProductCreate,db:Session=Depends(get_db)):
     db.add(new_product)
     db.commit()
     db.refresh(new_product)
-    return {"message": "Product added", "product": product}  
+    return ProductResponse(
+        message="Product added",
+        id=new_product.id,
+        name=new_product.name,
+        price=new_product.price
+    )
 
 #Shows_products     
 @app.get("/showproducts", response_model=ProductResponse)
