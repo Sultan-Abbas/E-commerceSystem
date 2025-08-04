@@ -11,10 +11,9 @@ DB_PORT = "3309"
 DB_NAME = "ecommerce"
 
 DATABASE_URL = f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-
-
+# DATABASE_URL= "sqlite:///./ecommerce.db"
 engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+SessionLocal = sessionmaker(bind=engine)
 
 
 

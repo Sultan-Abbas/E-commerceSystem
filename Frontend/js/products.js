@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, price }),
             });
-
+            console.log(post_function)
             const result = await post_function.json();
             document.getElementById('addmsg').innerText = result.message || result.detail;
         });
@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('GetProductForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const response = await fetch('http://127.0.0.1:8000/showproducts');  // fixed typo
+            const response = await fetch('http://127.0.0.1:8000/showproducts'); 
             const data = await response.json();
 
             const list = document.getElementById('productlist');
@@ -49,6 +49,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: "PUT",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, price }),
+                
+
             });
 
             const result = await post_function.json();

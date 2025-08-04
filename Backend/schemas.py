@@ -17,7 +17,4 @@ class ProductResponse(BaseModel):
     id: int
     name: str
     price: float
-    # Include other fields you want to expose
     
-    class Config:
-        from_attributes = True

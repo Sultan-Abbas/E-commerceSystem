@@ -4,16 +4,22 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from schemas import RegisterUser,LoginUser,ProductCreate,ProductResponse
 from database import get_db
-from model import User as UserModel, Product as ProductModel
+from model import UserModel , Product as ProductModel
+
 from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI()
+
+# Allow all origins (for development)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # You can specify ["http://127.0.0.1:5500"] for more security
+    allow_origins=["*"],  # 👈 Allows all origins. Use caution in production.
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
 # users_db = {}
 # products_db = []
 #home
@@ -28,24 +34,21 @@ def greet_user(name : Optional[str] = None):
     return {"message":"Hello There!"}
 #register
 @app.post("/register")
-def register_user(user:RegisterUser,db:Session=Depends(get_db)):
-    db_user= db.query(UserModel).filter(UserModel.username==user.username ).first()
+def register_user(user: RegisterUser, db: Session = Depends(get_db)):
+    db_user = db.query(UserModel).filter(UserModel.username == user.username).first()
     if db_user:
-        raise HTTPException(status_code=400,detail="User Already Exists")
-    new_user=UserModel(username=user.username,password=user.password)
+        raise HTTPException(status_code=400, detail="User Already Exists")
+    
+    new_user = UserModel(username=user.username, password=user.password)
     db.add(new_user)
     db.commit()
-    """ When you create and commit a new database record:
-    The Python object (new_user) initially only has the data you provided (e.g., username and password).
-    The database may auto-generate additional values (like id, created_at, or server-side defaults) that aren't 
-    in your Python object yet.SO we Use Refresh"""
     db.refresh(new_user)
     return {"message": "User registered successfully"}
 #login     
 @app.post("/login")
 def login(user: LoginUser,db:Session=Depends(get_db)):
     db_user= db.query(UserModel).filter(UserModel.username==user.username ).first()
-    if not db_user or db_user.password != user.password:  # Later: use password hashing!
+    if not db_user or db_user.password != user.password:  
         raise HTTPException(status_code=401, detail="Invalid credentials")
     return {"message": f"Welcome back, {user.username}!"}
     
@@ -67,10 +70,10 @@ def add_product(product: ProductCreate,db:Session=Depends(get_db)):
     )
 
 #Shows_products     
-@app.get("/showproducts", response_model=ProductResponse)
+@app.get("/showproducts",response_model=ProductResponse)
 def get_products(db: Session = Depends(get_db)):
     products = db.query(ProductModel).all()
-    return {"products": products}
+    return products
 
 #delete_products
 @app.delete("/deleteproduct/{product_name}")
